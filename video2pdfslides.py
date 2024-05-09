@@ -9,7 +9,7 @@ import argparse
 
 ############# Define constants
 
-OUTPUT_SLIDES_DIR = f"./output"
+OUTPUT_SLIDES_DIR = f"./output_3"
 
 FRAME_RATE = 3                   # no.of frames per second that needs to be processed, fewer the count faster the speed
 WARMUP = FRAME_RATE              # initial number of frames to be skipped
@@ -41,7 +41,7 @@ def get_frames(video_path):
     while True:
         # grab a frame from the video
 
-        vs.set(cv2.CAP_PROP_POS_MSEC, frame_time * 1000)    # move frame to a timestamp
+        vs.set(cv2.CAP_PROP_POS_MSEC, frame_time * 100)    # move frame to a timestamp
         frame_time += 1/FRAME_RATE
 
         (_, frame) = vs.read()
@@ -148,6 +148,9 @@ if __name__ == "__main__":
     detect_unique_screenshots(video_path, output_folder_screenshot_path)
 
     print('Please Manually verify screenshots and delete duplicates')
+    os.system(f"ffmpeg -i {video_path} -q:v 0 ./tmp/output.mp4")
+    
+
     while True:
         choice = input("Press y to continue and n to terminate")
         choice = choice.lower().strip()
@@ -158,3 +161,4 @@ if __name__ == "__main__":
 
     if choice == 'y':
         convert_screenshots_to_pdf(output_folder_screenshot_path)
+        os.system("rm -rf ./tmp")
